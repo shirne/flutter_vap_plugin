@@ -36,6 +36,7 @@ class FlutterVapController {
     if (Platform.isIOS) {
       await _channel?.invokeMethod('play', {
         'path': path,
+        'repeatCount': repeatCount,
         'sourceType': sourceType.type,
       });
     }

@@ -107,8 +107,9 @@ class FlutterVapView: NSObject, FlutterPlatformView, VAPWrapViewDelegate {
             case "play":
                 if let args = call.arguments as? [String: Any],
                    let path = args["path"] as? String,
+                   let repeatCount = args["repeatCount"] as? Int,
                    let sourceType = args["sourceType"] as? String {
-                    self.playWithParams(path: path, sourceType: sourceType)
+                    self.playWithParams(path: path, repeatCount:repeatCount, sourceType: sourceType)
                     print("play 方法 sourcePath:", path)
                     result(nil)
                 } else {
@@ -151,7 +152,7 @@ class FlutterVapView: NSObject, FlutterPlatformView, VAPWrapViewDelegate {
         }
     }
 
-    private func playVideo(_ videoPath: String) {
+    private func playVideo(_ videoPath: String, _ repeatCount: Int) {
         guard vapView != nil else {
             let errorInfo: [String: Any] = [
                 "errorType": -1,
@@ -179,7 +180,7 @@ class FlutterVapView: NSObject, FlutterPlatformView, VAPWrapViewDelegate {
             print("FlutterVapPlugin - Playing video from path: \(videoPath)")
             // 播放前应用缩放策略（若外部未来支持动态切换）
             self.applyScaleType()
-            vapView.playHWDMP4(videoPath, repeatCount: 0, delegate: self)
+            vapView.playHWDMP4(videoPath, repeatCount: repeatCount, delegate: self)
         }
     }
 
@@ -227,15 +228,15 @@ class FlutterVapView: NSObject, FlutterPlatformView, VAPWrapViewDelegate {
         return containerView
     }
 
-    private func playWithParams(path: String, sourceType: String) {
+    private func playWithParams(path: String, repeatCount: Int, sourceType: String) {
         setupVapViewIfNeeded()
         switch sourceType {
         case "file":
-            self.playVideo(path)
+            self.playVideo(path, repeatCount)
         case "asset":
             let key = registrar.lookupKey(forAsset: path)
             if let assetPath = Bundle.main.path(forResource: key, ofType: nil) {
-                self.playVideo(assetPath)
+                self.playVideo(assetPath, repeatCount)
             } else {
                 print("FlutterVapPlugin - Could not find asset: \(path)")
                 let errorInfo: [String: Any] = [
