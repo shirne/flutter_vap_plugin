@@ -17,6 +17,7 @@ class FlutterVapView extends StatefulWidget {
     this.onVideoFinish,
     this.onVideoDestroy,
     this.onVideoRender,
+    this.onReady,
     this.onFailed,
     this.scaleType = VapScaleType.fitXY,
   });
@@ -39,6 +40,8 @@ class FlutterVapView extends StatefulWidget {
   // 播放失败回调，返回错误类型和信息
   final VapErrorCallback? onFailed;
 
+  final VoidCallback? onReady;
+
   /// 视频缩放类型，默认 fitXY
   /// Video scaling type, default is fitXY
   final VapScaleType scaleType;
@@ -60,6 +63,7 @@ class _FlutterVapViewState extends State<FlutterVapView> {
     _channel = MethodChannel('flutter_vap_plugin_$id');
     _channel?.setMethodCallHandler(_handleMethodCall);
     widget.controller.bindChannel(_channel!);
+    widget.onReady?.call();
   }
 
   Future<dynamic> _handleMethodCall(MethodCall call) async {
