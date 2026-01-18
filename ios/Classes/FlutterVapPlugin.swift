@@ -109,8 +109,8 @@ class FlutterVapView: NSObject, FlutterPlatformView, VAPWrapViewDelegate {
                    let path = args["path"] as? String,
                    let repeatCount = args["repeatCount"] as? Int,
                    let sourceType = args["sourceType"] as? String {
-                    self.playWithParams(path: path, repeatCount:repeatCount, sourceType: sourceType)
-                    print("play 方法 sourcePath:", path)
+                    self.playWithParams(path: path, repeatCount: repeatCount, sourceType: sourceType)
+                    print("VAP play 方法 path: \(path), repeatCount: \(repeatCount), sourceType: \(sourceType)")
                     result(nil)
                 } else {
                     result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments for play", details: nil))
@@ -177,7 +177,7 @@ class FlutterVapView: NSObject, FlutterPlatformView, VAPWrapViewDelegate {
             vapView.stopHWDMP4()
             self.isPlaying = true
 
-            print("FlutterVapPlugin - Playing video from path: \(videoPath)")
+            print("FlutterVapPlugin - Playing video from path: \(videoPath), count: \(repeatCount)")
             // 播放前应用缩放策略（若外部未来支持动态切换）
             self.applyScaleType()
             vapView.playHWDMP4(videoPath, repeatCount: repeatCount, delegate: self)
